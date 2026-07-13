@@ -1,0 +1,43 @@
+name: regen
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  regen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Regenerate from upstream specs
+        run: cargo run --package srcgen
+
+      - name: Format generated output
+        run: cargo fmt
+
+      - name: Verify workspace compiles
+        run: cargo clippy --all-targets
+
+      - name: Open pull request when output changed
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: regen/srcgen
+          commit-message: "chore: regenerate srcgen output from upstream specs"
+          title: "chore: regenerate srcgen output"
+          body: |
+            Automated regeneration. Upstream spec files (riotapi-schema, CommunityDragon) changed since the last run.
+
+            Review the diff for removed endpoints or renamed models before merging.
+          delete-branch: true

@@ -1,0 +1,39 @@
+{
+  "paths": {
+    "/lol/league/v4/leagues/{leagueId}": {
+      "get": {
+        "operationId": "league-v4.getLeagueById",
+        "x-route-enum": "platform",
+        "summary": "Get league with given ID, including inactive entries.",
+        "description": "Get league with given ID, including inactive entries.\n## Implementation Notes\nConsistently looking up league ids that don't exist will result in a blacklist.",
+        "externalDocs": {
+          "description": "Official API Reference",
+          "url": "https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueById"
+        },
+        "parameters": [
+          {
+            "name": "leagueId",
+            "in": "path",
+            "required": true,
+            "description": "The UUID of the league.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/league-v4.LeagueListDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

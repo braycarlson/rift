@@ -1,0 +1,42 @@
+[package]
+name = "rift"
+edition.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[features]
+default = ["rustls-tls"]
+cache = []
+live-client = ["rustls-tls"]
+native-tls = ["reqwest/native-tls"]
+rso = ["reqwest/form"]
+rustls-tls = ["reqwest/rustls"]
+tracing = ["dep:tracing"]
+
+[dependencies]
+bytes = { workspace = true }
+percent-encoding = { workspace = true }
+reqwest = { workspace = true }
+rustc-hash = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true, optional = true }
+
+[dev-dependencies]
+dotenvy = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt", "rt-multi-thread", "test-util"] }
+
+[[example]]
+name = "live_client"
+required-features = ["live-client"]
+
+[[example]]
+name = "rso_flow"
+required-features = ["rso"]
+
+[package.metadata.docs.rs]
+all-features = true
